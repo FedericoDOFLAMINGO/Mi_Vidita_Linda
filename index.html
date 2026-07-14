@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Para Angy 💌</title>
+<style>
+  :root{
+    --navy-deep: #0a0e27;
+    --navy-mid: #131b3f;
+    --navy-light: #1e2a5e;
+    --gold: #f4d35e;
+    --gold-soft: #ead9a0;
+    --rose: #ff8fa3;
+    --rose-deep: #e0607e;
+    --cream: #fdf6ec;
+    --paper: #fbf3e1;
+    --paper-shadow: #d8c9a3;
+  }
+
+  *{ box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body{
+    width: 100%;
+    min-height: 100%;
+    background: var(--navy-deep);
+    font-family: 'Georgia', 'Times New Roman', serif;
+    color: var(--cream);
+    overflow-x: hidden;
+  }
+
+  body{
+    background: radial-gradient(ellipse at top, #17204a 0%, #0a0e27 60%, #05070f 100%);
+    position: relative;
+    min-height: 100vh;
+  }
+
+  /* estrellas de fondo */
+  #starfield{
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+  .bg-star{
+    position: absolute;
+    background: #fff;
+    border-radius: 50%;
+    opacity: .7;
+    animation: twinkle 3s ease-in-out infinite;
+  }
+  @keyframes twinkle{
+    0%,100%{ opacity: .2; transform: scale(1); }
+    50%{ opacity: 1; transform: scale(1.4); }
+  }
+
+  h1, h2, h3{
+    font-family: 'Brush Script MT', 'Segoe Script', cursive;
+    font-weight: normal;
+  }
+
+  /* ===== PANTALLA SOBRE ===== */
+  #envelope-screen{
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 24px;
+    transition: opacity 1s ease, visibility 1s ease;
+  }
+  #envelope-screen.hidden{
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+  #envelope-screen p.hint{
+    font-family: Georgia, serif;
+    font-size: 15px;
+    letter-spacing: 1px;
+    color: var(--gold-soft);
+    opacity: .85;
+  }
+  .envelope{
+    width: 300px;
+    height: 200px;
+    position: relative;
+    cursor: pointer;
+    filter: drop-shadow(0 15px 35px rgba(0,0,0,.6));
+    transform: scale(1);
+    transition: transform .3s ease;
+  }
+  .envelope:hover{ transform: scale(1.03); }
+  .env-body{
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(160deg, #f3e6c9, #e8d4a8);
+    border-radius: 6px;
+  }
+  .env-flap{
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 100px;
+    background: linear-gradient(160deg, #ecd9ae, #dcc286);
+    clip-path: polygon(0 0, 100% 0, 50% 90%);
+    transform-origin: top;
+    transition: transform .9s cubic-bezier(.6,-0.28,.74,.05);
+    z-index: 3;
+    border-radius: 6px 6px 0 0;
+  }
+  .envelope.open .env-flap{
+    transform: rotateX(180deg);
+  }
+  .seal{
+    position: absolute;
+    top: 78px; left: 50%;
+    transform: translate(-50%, 0);
+    width: 56px; height: 56px;
+    background: radial-gradient(circle at 35% 30%, var(--rose), var(--rose-deep));
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px;
+    z-index: 4;
+    box-shadow: 0 4px 10px rgba(0,0,0,.4);
+    transition: opacity .4s ease, transform .4s ease;
+  }
+  .envelope.open .seal{
+    opacity: 0;
+    transform: translate(-50%,0) scale(0);
+  }
+  .env-letter-peek{
+    position: absolute;
+    left: 20px; right: 20px; bottom: -6px;
+    height: 0px;
+    background: var(--paper);
+    border-radius: 4px 4px 0 0;
+    z-index: 2;
+    transition: height .7s ease .3s;
+    overflow: hidden;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 8px;
+  }
+  .env-letter-peek span{
+    font-family: 'Brush Script MT', cursive;
+    font-size: 18px;
+    color: var(--rose-deep);
+    opacity: 0;
+    transition: opacity .5s ease .9s;
+    white-space: nowrap;
+  }
+  .envelope.open .env-letter-peek{
+    height: 60px;
+  }
+  .envelope.open .env-letter-peek span{
+    opacity: 1;
+  }
+
+  /* ===== PANTALLA PRINCIPAL ===== */
+  #main-screen{
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    padding: 60px 20px 100px;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 1.2s ease;
+  }
+  #main-screen.show{
+    display: flex;
+    opacity: 1;
+  }
+
+  .title-main{
+    font-size: 46px;
+    color: var(--gold);
+    text-align: center;
+    text-shadow: 0 0 18px rgba(244,211,94,.5);
+    margin-bottom: 6px;
+  }
+  .subtitle-main{
+    font-family: Georgia, serif;
+    font-size: 15px;
+    color: var(--rose);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 50px;
+    text-align: center;
+  }
+
+  .corkboard{
+    width: 100%;
+    max-width: 950px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 30px;
+    margin-bottom: 60px;
+  }
+
+  .note-card{
+    background: linear-gradient(160deg, var(--paper), #f0e2c0);
+    color: #3a2f1f;
+    border-radius: 4px;
+    padding: 26px 20px 22px;
+    min-height: 220px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 12px;
+    box-shadow: 0 12px 24px rgba(0,0,0,.35), 0 0 0 1px rgba(0,0,0,.05) inset;
+    position: relative;
+    transform: rotate(var(--rot,-2deg));
+    cursor: pointer;
+    transition: transform .3s ease, box-shadow .3s ease;
+  }
+  .note-card:hover{
+    transform: rotate(0deg) translateY(-6px) scale(1.02);
+    box-shadow: 0 20px 30px rgba(0,0,0,.45);
+  }
+  .note-card:nth-child(1){ --rot: -3deg; }
+  .note-card:nth-child(2){ --rot: 2deg; }
+  .note-card:nth-child(3){ --rot: -1.5deg; }
+  .note-card:nth-child(4){ --rot: 2.5deg; }
+
+  .pin{
+    position: absolute;
+    top: -10px; left: 50%;
+    transform: translateX(-50%);
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #ff8fa3, #c23a5c);
+    box-shadow: 0 3px 5px rgba(0,0,0,.5);
+  }
+  .note-icon{ font-size: 40px; }
+  .note-title{ font-family: 'Brush Script MT', cursive; font-size: 26px; }
+  .note-desc{ font-size: 13px; opacity: .75; line-height: 1.4; }
+
+  .final-btn-wrap{
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+  }
+  .final-btn{
+    background: linear-gradient(135deg, var(--gold), #d8ad3a);
+    color: #3a2a10;
+    border: none;
+    padding: 16px 38px;
+    font-size: 17px;
+    font-family: Georgia, serif;
+    letter-spacing: 1px;
+    border-radius: 40px;
+    cursor: pointer;
+    box-shadow: 0 10px 25px rgba(244,211,94,.35);
+    transition: transform .25s ease, box-shadow .25s ease;
+  }
+  .final-btn:hover{
+    transform: translateY(-3px);
+    box-shadow: 0 14px 30px rgba(244,211,94,.5);
+  }
+
+  /* ===== MODALES ===== */
+  .modal-overlay{
+    position: fixed;
+    inset: 0;
+    background: rgba(5,7,15,.85);
+    backdrop-filter: blur(3px);
+    z-index: 100;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .modal-overlay.show{ display: flex; }
+  .modal-box{
+    background: linear-gradient(165deg, var(--paper), #f2e6c8);
+    color: #3a2f1f;
+    border-radius: 14px;
+    max-width: 560px;
+    width: 100%;
+    max-height: 88vh;
+    overflow-y: auto;
+    padding: 34px 28px 28px;
+    position: relative;
+    box-shadow: 0 30px 60px rgba(0,0,0,.5);
+    animation: pop-in .35s ease;
+  }
+  @keyframes pop-in{
+    from{ transform: scale(.85); opacity: 0; }
+    to{ transform: scale(1); opacity: 1; }
+  }
+  .modal-close{
+    position: absolute;
+    top: 14px; right: 16px;
+    background: none;
+    border: none;
+    font-size: 22px;
+    color: #7a6a48;
+    cursor: pointer;
+    line-height: 1;
+  }
+  .modal-close:hover{ color: var(--rose-deep); }
+  .modal-title{
+    font-family: 'Brush Script MT', cursive;
+    font-size: 32px;
+    text-align: center;
+    margin-bottom: 18px;
+    color: var(--rose-deep);
+  }
+
+  /* ---- Cofre ---- */
+  .chest{
+    font-size: 70px;
+    text-align: center;
+    cursor: pointer;
+    user-select: none;
+    transition: transform .15s ease;
+  }
+  .chest:active{ transform: scale(.9) rotate(-4deg); }
+  .reason-box{
+    margin-top: 20px;
+    background: #fff9ec;
+    border: 1px dashed var(--rose-deep);
+    border-radius: 10px;
+    padding: 18px;
+    text-align: center;
+    font-size: 17px;
+    min-height: 60px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .chest-hint{
+    text-align: center;
+    font-size: 13px;
+    opacity: .6;
+    margin-top: 10px;
+  }
+
+  /* ---- Memorama ---- */
+  .mem-grid{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin: 10px auto 0;
+    max-width: 420px;
+  }
+  .mem-card{
+    aspect-ratio: 1/1;
+    perspective: 700px;
+    cursor: pointer;
+  }
+  .mem-card-inner{
+    width: 100%; height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform .5s ease;
+    border-radius: 8px;
+  }
+  .mem-card.flipped .mem-card-inner,
+  .mem-card.matched .mem-card-inner{
+    transform: rotateY(180deg);
+  }
+  .mem-face{
+    position: absolute; inset: 0;
+    backface-visibility: hidden;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+  }
+  .mem-front{
+    background: linear-gradient(135deg, var(--navy-light), var(--navy-mid));
+    font-size: 22px;
+    box-shadow: 0 3px 8px rgba(0,0,0,.3);
+  }
+  .mem-back{
+    transform: rotateY(180deg);
+    background: #fff;
+  }
+  .mem-back img{
+    width: 100%; height: 100%;
+    object-fit: cover;
+  }
+  .mem-card.matched .mem-face.mem-back{
+    box-shadow: 0 0 0 3px var(--gold) inset;
+  }
+  .mem-status{
+    text-align: center;
+    margin-top: 14px;
+    font-size: 14px;
+    opacity: .75;
+  }
+
+  /* ---- Rasca ---- */
+  .scratch-wrap{
+    position: relative;
+    max-width: 400px;
+    margin: 0 auto;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 20px rgba(0,0,0,.3);
+  }
+  .scratch-under{
+    background: linear-gradient(135deg, #fff0f4, #ffe0e9);
+    min-height: 220px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 30px;
+    font-size: 19px;
+    color: var(--rose-deep);
+    font-family: 'Brush Script MT', cursive;
+  }
+  #scratchCanvas{
+    position: absolute;
+    top: 0; left: 0;
+    touch-action: none;
+    cursor: crosshair;
+  }
+  .scratch-hint{
+    text-align: center;
+    font-size: 13px;
+    opacity: .6;
+    margin-top: 12px;
+  }
+
+  /* ---- Ruleta de citas ---- */
+  .wheel-wrap{
+    position: relative;
+    max-width: 380px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  .wheel-pointer{
+    width: 0; height: 0;
+    margin: 0 auto -6px;
+    border-left: 13px solid transparent;
+    border-right: 13px solid transparent;
+    border-top: 22px solid var(--rose-deep);
+    position: relative;
+    z-index: 3;
+    filter: drop-shadow(0 3px 4px rgba(0,0,0,.4));
+  }
+  .wheel{
+    position: relative;
+    width: 260px;
+    height: 260px;
+    margin: 0 auto;
+    border-radius: 50%;
+    border: 6px solid var(--gold);
+    box-shadow: 0 12px 30px rgba(0,0,0,.45), inset 0 0 20px rgba(0,0,0,.15);
+    transition: transform 4s cubic-bezier(.17,.67,.2,1.02);
+  }
+  .wheel-emoji{
+    position: absolute;
+    width: 38px; height: 38px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px;
+    pointer-events: none;
+  }
+  .wheel-center{
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 26px; height: 26px;
+    transform: translate(-50%,-50%);
+    background: radial-gradient(circle at 35% 30%, var(--gold-soft), #a97e1f);
+    border-radius: 50%;
+    box-shadow: 0 3px 8px rgba(0,0,0,.4);
+    z-index: 2;
+  }
+  .spin-btn{
+    margin-top: 22px;
+    background: linear-gradient(135deg, var(--gold), #d8ad3a);
+    color: #3a2a10;
+    border: none;
+    padding: 13px 32px;
+    font-size: 15px;
+    font-family: Georgia, serif;
+    letter-spacing: .5px;
+    border-radius: 40px;
+    cursor: pointer;
+    box-shadow: 0 10px 22px rgba(244,211,94,.35);
+    transition: transform .25s ease, box-shadow .25s ease;
+  }
+  .spin-btn:hover{
+    transform: translateY(-2px);
+    box-shadow: 0 14px 26px rgba(244,211,94,.5);
+  }
+  .spin-btn:disabled{
+    opacity: .6;
+    cursor: default;
+    transform: none;
+  }
+  .wheel-msg{
+    margin-top: 18px;
+    background: #fff9ec;
+    border: 1px dashed var(--rose-deep);
+    border-radius: 10px;
+    padding: 16px;
+    text-align: center;
+    font-size: 16px;
+    min-height: 54px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .wheel-hint{
+    text-align: center;
+    font-size: 13px;
+    opacity: .6;
+    margin-top: 10px;
+  }
+
+  /* ===== PANTALLA FINAL ===== */
+  #final-screen{
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: radial-gradient(ellipse at center, rgba(20,26,60,.95), rgba(5,7,15,.98));
+  }
+  #final-screen.show{ display: flex; }
+  .final-card{
+    max-width: 560px;
+    width: 100%;
+    background: linear-gradient(165deg, var(--paper), #f2e6c8);
+    color: #3a2f1f;
+    border-radius: 16px;
+    padding: 36px 30px;
+    text-align: center;
+    box-shadow: 0 30px 70px rgba(0,0,0,.6);
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    animation: pop-in .5s ease;
+  }
+  .final-photo{
+    width: 220px;
+    height: 220px;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 6px solid #fff;
+    box-shadow: 0 10px 25px rgba(0,0,0,.3);
+    margin-bottom: 20px;
+  }
+  .final-photo-missing{
+    width: 220px;
+    height: 220px;
+    margin: 0 auto 20px;
+    border-radius: 12px;
+    border: 2px dashed var(--rose-deep);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px;
+    color: var(--rose-deep);
+    padding: 10px;
+    text-align: center;
+  }
+  .dedi-title{
+    font-family: 'Brush Script MT', cursive;
+    font-size: 34px;
+    color: var(--rose-deep);
+    margin-bottom: 14px;
+  }
+  .dedi-text{
+    font-size: 16px;
+    line-height: 1.8;
+    text-align: left;
+    margin-bottom: 20px;
+  }
+  .dedi-sign{
+    font-family: 'Brush Script MT', cursive;
+    font-size: 24px;
+    color: var(--rose-deep);
+  }
+  .final-close{
+    margin-top: 20px;
+    background: none;
+    border: 1px solid #a99566;
+    color: #6b5a3a;
+    padding: 8px 20px;
+    border-radius: 30px;
+    font-size: 13px;
+    cursor: pointer;
+  }
+
+  .heart-confetti{
+    position: fixed;
+    top: -30px;
+    font-size: 20px;
+    z-index: 201;
+    pointer-events: none;
+    animation: fall linear forwards;
+  }
+  @keyframes fall{
+    to{ transform: translateY(110vh) rotate(360deg); opacity: .2; }
+  }
+
+  @media (max-width: 480px){
+    .title-main{ font-size: 34px; }
+    .mem-grid{ grid-template-columns: repeat(4, 1fr); gap: 7px; }
+    .wheel{ width: 230px; height: 230px; }
+  }
+</style>
+</head>
+<body>
+
+<div id="starfield"></div>
+
+<!-- ===== SOBRE ===== -->
+<div id="envelope-screen">
+  <div class="envelope" id="envelope">
+    <div class="env-letter-peek"><span>Para mi Angy...</span></div>
+    <div class="env-body"></div>
+    <div class="env-flap"></div>
+    <div class="seal">💌</div>
+  </div>
+  <p class="hint">Toca el sobre para abrirlo</p>
+</div>
+
+<!-- ===== PANTALLA PRINCIPAL ===== -->
+<div id="main-screen">
+  <h1 class="title-main">Para ti, Angy</h1>
+  <p class="subtitle-main">una cartita con sorpresas adentro</p>
+
+  <div class="corkboard">
+    <div class="note-card" data-modal="modal-cofre">
+      <div class="pin"></div>
+      <div class="note-icon">💌</div>
+      <div class="note-title">El cofre de razones</div>
+      <div class="note-desc">Ábrelo las veces que quieras</div>
+    </div>
+
+    <div class="note-card" data-modal="modal-memorama">
+      <div class="pin"></div>
+      <div class="note-icon">🧠</div>
+      <div class="note-title">Memorama nuestro</div>
+      <div class="note-desc">Encuentra las parejas</div>
+    </div>
+
+    <div class="note-card" data-modal="modal-rasca">
+      <div class="pin"></div>
+      <div class="note-icon">🪙</div>
+      <div class="note-title">Tarjeta raspable</div>
+      <div class="note-desc">Descubre el mensaje escondido</div>
+    </div>
+
+    <div class="note-card" data-modal="modal-ruleta">
+      <div class="pin"></div>
+      <div class="note-icon">🎡</div>
+      <div class="note-title">Ruleta de citas</div>
+      <div class="note-desc">Gira y descubre nuestro próximo plan</div>
+    </div>
+  </div>
+
+  <div class="final-btn-wrap">
+    <button class="final-btn" id="openFinalBtn">Abrir la última carta 💛</button>
+  </div>
+</div>
+
+<!-- ===== MODAL: COFRE ===== -->
+<div class="modal-overlay" id="modal-cofre">
+  <div class="modal-box">
+    <button class="modal-close" data-close>&times;</button>
+    <div class="modal-title">El cofre de razones</div>
+    <div class="chest" id="chestBtn">💌</div>
+    <div class="reason-box" id="reasonBox">Toca el cofre para descubrir una razón por la que te amo</div>
+    <div class="chest-hint">Puedes tocarlo tantas veces como quieras</div>
+  </div>
+</div>
+
+<!-- ===== MODAL: MEMORAMA ===== -->
+<div class="modal-overlay" id="modal-memorama">
+  <div class="modal-box">
+    <button class="modal-close" data-close>&times;</button>
+    <div class="modal-title">Memorama nuestro</div>
+    <div class="mem-grid" id="memGrid"></div>
+    <div class="mem-status" id="memStatus">Encuentra las 6 parejas</div>
+  </div>
+</div>
+
+<!-- ===== MODAL: RASCA ===== -->
+<div class="modal-overlay" id="modal-rasca">
+  <div class="modal-box">
+    <button class="modal-close" data-close>&times;</button>
+    <div class="modal-title">Tarjeta raspable</div>
+    <div class="scratch-wrap" id="scratchWrap">
+      <div class="scratch-under">Eres lo mejor que me ha pasado 💕</div>
+      <canvas id="scratchCanvas"></canvas>
+    </div>
+    <div class="scratch-hint">Rasca con el dedo o el mouse</div>
+  </div>
+</div>
+
+<!-- ===== MODAL: RULETA ===== -->
+<div class="modal-overlay" id="modal-ruleta">
+  <div class="modal-box">
+    <button class="modal-close" data-close>&times;</button>
+    <div class="modal-title">Ruleta de citas</div>
+    <div class="wheel-wrap">
+      <div class="wheel-pointer"></div>
+      <div class="wheel" id="wheel">
+        <div class="wheel-center"></div>
+      </div>
+      <button class="spin-btn" id="spinBtn">Girar la ruleta</button>
+      <div class="wheel-msg" id="wheelMsg">Gira y descubre nuestro próximo plan juntos ✨</div>
+      <div class="wheel-hint">Puedes girarla tantas veces como quieras</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PANTALLA FINAL ===== -->
+<div id="final-screen">
+  <div class="final-card">
+    <img src="AF.jpg" alt="Nosotros" class="final-photo" id="finalPhoto"
+         onerror="this.onerror=null; this.replaceWith(document.getElementById('finalPhotoFallback'));">
+    <div class="final-photo-missing" id="finalPhotoFallback" style="display:none;">
+      Coloca aquí una foto llamada <b>AF.jpg</b> junto a este archivo
+    </div>
+    <div class="dedi-title">Mi persona favorita</div>
+    <p class="dedi-text">
+      Angy, cada día a tu lado confirmo que eres la persona que quiero para todo:
+      para reír de tonterías, para los planes locos y para los días tranquilos.
+      Amo tu forma de ver la vida, tu risa, tu manera de cuidarme sin que lo pida,
+      y hasta esas cosas pequeñas que seguro ni notas pero que a mí me enamoran cada vez más.
+      Gracias por ser mi lugar favorito. Te amo, hoy y siempre.
+    </p>
+    <div class="dedi-sign">— Fer, para su Angy</div>
+    <button class="final-close" data-close-final>Cerrar</button>
+  </div>
+</div>
+
+<audio id="bgMusic" src="musica.mp3" loop></audio>
+
+<script>
+/* ============ ESTRELLAS DE FONDO ============ */
+(function(){
+  const field = document.getElementById('starfield');
+  const n = 90;
+  for(let i=0;i<n;i++){
+    const s = document.createElement('div');
+    s.className = 'bg-star';
+    const size = Math.random()*2 + 1;
+    s.style.width = size+'px';
+    s.style.height = size+'px';
+    s.style.left = Math.random()*100+'vw';
+    s.style.top = Math.random()*100+'vh';
+    s.style.animationDelay = (Math.random()*3)+'s';
+    s.style.animationDuration = (2+Math.random()*3)+'s';
+    field.appendChild(s);
+  }
+})();
+
+/* ============ MÚSICA (con fallback generado) ============ */
+let musicStarted = false;
+let audioCtx = null;
+function startMusic(){
+  if(musicStarted) return;
+  musicStarted = true;
+  const audioEl = document.getElementById('bgMusic');
+  audioEl.volume = 0.5;
+  audioEl.play().catch(()=>{
+    playGeneratedMelody();
+  });
+  audioEl.addEventListener('error', playGeneratedMelody, { once:true });
+}
+function playGeneratedMelody(){
+  if(audioCtx) return;
+  try{
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const notes = [523.25,587.33,659.25,523.25,659.25,783.99,880.00,783.99,659.25,587.33,523.25,587.33];
+    let t = audioCtx.currentTime;
+    function loopMelody(){
+      notes.forEach((freq)=>{
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0, t);
+        gain.gain.linearRampToValueAtTime(0.08, t+0.05);
+        gain.gain.linearRampToValueAtTime(0, t+0.45);
+        osc.connect(gain).connect(audioCtx.destination);
+        osc.start(t);
+        osc.stop(t+0.5);
+        t += 0.5;
+      });
+      setTimeout(loopMelody, notes.length*500);
+    }
+    loopMelody();
+  }catch(e){}
+}
+
+/* ============ SOBRE ============ */
+const envelope = document.getElementById('envelope');
+const envelopeScreen = document.getElementById('envelope-screen');
+const mainScreen = document.getElementById('main-screen');
+
+envelope.addEventListener('click', ()=>{
+  if(envelope.classList.contains('open')) return;
+  envelope.classList.add('open');
+  startMusic();
+  setTimeout(()=>{
+    envelopeScreen.classList.add('hidden');
+    mainScreen.classList.add('show');
+  }, 1100);
+});
+
+/* ============ MODALES ============ */
+document.querySelectorAll('.note-card').forEach(card=>{
+  card.addEventListener('click', ()=>{
+    const id = card.getAttribute('data-modal');
+    document.getElementById(id).classList.add('show');
+    if(id === 'modal-memorama') initMemorama();
+    if(id === 'modal-rasca') initScratch();
+    if(id === 'modal-ruleta') initWheel();
+  });
+});
+document.querySelectorAll('.modal-close').forEach(btn=>{
+  btn.addEventListener('click', (e)=>{
+    e.target.closest('.modal-overlay').classList.remove('show');
+  });
+});
+document.querySelectorAll('.modal-overlay').forEach(ov=>{
+  ov.addEventListener('click', (e)=>{
+    if(e.target === ov) ov.classList.remove('show');
+  });
+});
+document.addEventListener('keydown', (e)=>{
+  if(e.key === 'Escape'){
+    document.querySelectorAll('.modal-overlay.show').forEach(ov=>ov.classList.remove('show'));
+    document.getElementById('final-screen').classList.remove('show');
+  }
+});
+
+/* ============ COFRE DE RAZONES ============ */
+const reasons = [
+  "Porque tu risa es mi sonido favorito del mundo.",
+  "Porque me cuidas sin que tenga que pedírtelo.",
+  "Porque contigo hasta lo aburrido se vuelve divertido.",
+  "Porque tienes la paciencia que a mí me falta.",
+  "Porque cada plan contigo se siente especial.",
+  "Porque me haces querer ser mejor cada día.",
+  "Porque tu forma de ver la vida me inspira.",
+  "Porque eres mi persona favorita para contar todo.",
+  "Porque tu abrazo es mi lugar seguro.",
+  "Porque amo hasta tus manías más raras.",
+  "Porque contigo el tiempo se pasa volando.",
+  "Porque me escuchas de verdad, siempre.",
+  "Porque tu apoyo me sostiene en los días difíciles.",
+  "Porque eres bonita por dentro y por fuera.",
+  "Porque simplemente no me imagino esto sin ti."
+];
+let lastReasonIdx = -1;
+document.getElementById('chestBtn').addEventListener('click', ()=>{
+  let idx;
+  do{ idx = Math.floor(Math.random()*reasons.length); } while(idx === lastReasonIdx && reasons.length>1);
+  lastReasonIdx = idx;
+  document.getElementById('reasonBox').textContent = reasons[idx];
+  const chest = document.getElementById('chestBtn');
+  chest.style.transform = 'scale(0.85) rotate(-6deg)';
+  setTimeout(()=>{ chest.style.transform = 'scale(1) rotate(0)'; }, 150);
+});
+
+/* ============ MEMORAMA ============ */
+let memInitialized = false;
+function initMemorama(){
+  if(memInitialized) return;
+  memInitialized = true;
+  const photos = ['mm1.jpg','mm2.jpg','mm3.jpg','mm4.jpg','mm5.jpg','mm6.jpg'];
+  let deck = [...photos, ...photos];
+  deck.sort(()=>Math.random()-0.5);
+
+  const grid = document.getElementById('memGrid');
+  let flipped = [];
+  let matchedCount = 0;
+  let lock = false;
+
+  deck.forEach((photo, i)=>{
+    const card = document.createElement('div');
+    card.className = 'mem-card';
+    card.dataset.photo = photo;
+    card.innerHTML = `
+      <div class="mem-card-inner">
+        <div class="mem-face mem-front">💗</div>
+        <div class="mem-face mem-back">
+          <img src="${photo}" alt="foto" onerror="this.parentElement.parentElement.parentElement.querySelector('.mem-front').textContent='📷';">
+        </div>
+      </div>`;
+    card.addEventListener('click', ()=>{
+      if(lock || card.classList.contains('flipped') || card.classList.contains('matched')) return;
+      card.classList.add('flipped');
+      flipped.push(card);
+      if(flipped.length === 2){
+        lock = true;
+        const [a,b] = flipped;
+        if(a.dataset.photo === b.dataset.photo){
+          a.classList.add('matched');
+          b.classList.add('matched');
+          matchedCount++;
+          flipped = [];
+          lock = false;
+          document.getElementById('memStatus').textContent = `Parejas encontradas: ${matchedCount}/6`;
+          if(matchedCount === 6){
+            document.getElementById('memStatus').textContent = '¡Las encontraste todas! Nosotros siempre encajamos 💕';
+          }
+        } else {
+          setTimeout(()=>{
+            a.classList.remove('flipped');
+            b.classList.remove('flipped');
+            flipped = [];
+            lock = false;
+          }, 800);
+        }
+      }
+    });
+    grid.appendChild(card);
+  });
+}
+
+/* ============ RASCA ============ */
+let scratchInitialized = false;
+function initScratch(){
+  if(scratchInitialized) return;
+  scratchInitialized = true;
+  const wrap = document.getElementById('scratchWrap');
+  const canvas = document.getElementById('scratchCanvas');
+  const ctx = canvas.getContext('2d');
+
+  function sizeCanvas(){
+    const rect = wrap.getBoundingClientRect();
+    canvas.width = rect.width;
+    canvas.height = rect.height;
+    ctx.fillStyle = '#c9c9d4';
+    ctx.fillRect(0,0,canvas.width, canvas.height);
+    ctx.fillStyle = '#6b6b7a';
+    ctx.font = '16px Georgia';
+    ctx.textAlign = 'center';
+    ctx.fillText('✦ Rasca aquí ✦', canvas.width/2, canvas.height/2);
+    ctx.globalCompositeOperation = 'destination-out';
+  }
+  sizeCanvas();
+
+  let drawing = false;
+  function getPos(e){
+    const rect = canvas.getBoundingClientRect();
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    return { x: clientX - rect.left, y: clientY - rect.top };
+  }
+  function scratchAt(x,y){
+    ctx.beginPath();
+    ctx.arc(x,y,22,0,Math.PI*2);
+    ctx.fill();
+  }
+  function start(e){ drawing = true; const p = getPos(e); scratchAt(p.x,p.y); }
+  function move(e){
+    if(!drawing) return;
+    e.preventDefault();
+    const p = getPos(e);
+    scratchAt(p.x,p.y);
+  }
+  function end(){ drawing = false; }
+
+  canvas.addEventListener('mousedown', start);
+  canvas.addEventListener('mousemove', move);
+  window.addEventListener('mouseup', end);
+  canvas.addEventListener('touchstart', start, {passive:true});
+  canvas.addEventListener('touchmove', move, {passive:false});
+  canvas.addEventListener('touchend', end);
+
+  window.addEventListener('resize', sizeCanvas);
+}
+
+/* ============ RULETA DE CITAS ============ */
+const wheelOptions = [
+  { emoji: "🎬", text: "Noche de películas en casa, cobijitas y palomitas." },
+  { emoji: "🚗", text: "Cita sorpresa: yo elijo el lugar y tú solo te dejas llevar." },
+  { emoji: "📺", text: "Maratón de nuestra serie favorita hasta quedarnos dormidos." },
+  { emoji: "🍰", text: "Salir por un postre rico solo para consentirte." },
+  { emoji: "🎲", text: "Noche de juegos de mesa, con trampas incluidas." },
+  { emoji: "🌳", text: "Picnic o paseo tranquilo al aire libre, solo tú y yo." },
+  { emoji: "🍜", text: "Día de comida random: cerramos los ojos y elegimos." },
+  { emoji: "🌅", text: "Ver el atardecer juntos, aunque sea desde la azotea." }
+];
+const wheelColors = ["#f3e6c9", "#ead9a0"];
+let wheelInitialized = false;
+let wheelRotation = 0;
+let wheelSpinning = false;
+
+function initWheel(){
+  if(wheelInitialized) return;
+  wheelInitialized = true;
+
+  const wheel = document.getElementById('wheel');
+  const n = wheelOptions.length;
+  const segAngle = 360 / n;
+
+  const stops = wheelOptions.map((_, i)=>{
+    const color = wheelColors[i % 2];
+    return `${color} ${i*segAngle}deg ${(i+1)*segAngle}deg`;
+  });
+  wheel.style.background = `conic-gradient(${stops.join(',')})`;
+
+  wheelOptions.forEach((opt, i)=>{
+    const angleDeg = i*segAngle + segAngle/2;
+    const angleRad = angleDeg * Math.PI / 180;
+    const radius = 95;
+    const x = 130 + radius*Math.sin(angleRad) - 19;
+    const y = 130 - radius*Math.cos(angleRad) - 19;
+    const el = document.createElement('div');
+    el.className = 'wheel-emoji';
+    el.style.left = x + 'px';
+    el.style.top = y + 'px';
+    el.textContent = opt.emoji;
+    wheel.appendChild(el);
+  });
+
+  document.getElementById('spinBtn').addEventListener('click', spinWheel);
+}
+
+function spinWheel(){
+  if(wheelSpinning) return;
+  wheelSpinning = true;
+  const btn = document.getElementById('spinBtn');
+  btn.disabled = true;
+
+  const n = wheelOptions.length;
+  const segAngle = 360 / n;
+  const idx = Math.floor(Math.random()*n);
+  const jitter = (Math.random()-0.5) * segAngle * 0.6;
+  const targetAngle = 360 - (idx*segAngle + segAngle/2) + jitter;
+  const extraTurns = 5 + Math.floor(Math.random()*3);
+
+  const base = wheelRotation - (wheelRotation % 360);
+  wheelRotation = base + extraTurns*360 + targetAngle;
+
+  const wheel = document.getElementById('wheel');
+  wheel.style.transform = `rotate(${wheelRotation}deg)`;
+
+  setTimeout(()=>{
+    document.getElementById('wheelMsg').textContent = wheelOptions[idx].text;
+    btn.disabled = false;
+    wheelSpinning = false;
+  }, 4100);
+}
+
+/* ============ CARTA FINAL ============ */
+const finalScreen = document.getElementById('final-screen');
+document.getElementById('openFinalBtn').addEventListener('click', ()=>{
+  finalScreen.classList.add('show');
+  launchConfetti();
+});
+document.querySelectorAll('[data-close-final]').forEach(btn=>{
+  btn.addEventListener('click', ()=> finalScreen.classList.remove('show'));
+});
+finalScreen.addEventListener('click', (e)=>{
+  if(e.target === finalScreen) finalScreen.classList.remove('show');
+});
+
+function launchConfetti(){
+  const hearts = ['💛','💕','✨','💫','💖'];
+  for(let i=0;i<28;i++){
+    setTimeout(()=>{
+      const el = document.createElement('div');
+      el.className = 'heart-confetti';
+      el.textContent = hearts[Math.floor(Math.random()*hearts.length)];
+      el.style.left = Math.random()*100+'vw';
+      el.style.animationDuration = (2.5+Math.random()*2)+'s';
+      el.style.fontSize = (14+Math.random()*14)+'px';
+      document.body.appendChild(el);
+      setTimeout(()=> el.remove(), 5000);
+    }, i*90);
+  }
+}
+</script>
+
+</body>
+</html>
